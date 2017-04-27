@@ -1,10 +1,9 @@
-
-https://travis-ci.org/it-kombinat/ansible-role-ssh-keys/pull_requests#
-
 SSH Keys
 =========
 
 Simplest role to map users with provided ssh keys.
+
+[![Build Status]()https://travis-ci.org/it-kombinat/ansible-role-ssh-keys.svg?branch=master](https://travis-ci.org/it-kombinat/ansible-role-ssh-keys)
 
 
 Requirements
