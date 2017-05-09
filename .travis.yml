@@ -18,11 +18,20 @@ before_install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/ansible-role-ssh-keys:ro ${run_opts} rndmh3ro/docker-${distro}-ansible:${version} "${init}" > "${container_id}"'
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/ansible-role-ssh-keys:ro ${run_opts} rndmh3ro/docker-${distro}-ansible:${version} "${init}" > "${container_id}"'
 
-  # Test role.
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml'
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml --syntax-check'
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml --syntax-check'
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)\n"'
-  # 
+  # Ansible syntax check.
+  - 'sudo ocker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml --syntax-check'
+
+  # Ansible Test role
+  - 'sudo ocker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml'
+
+  # Test role idempotence.
+  - >
+    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/ansible-role-ssh-keys/tests/test.yml
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Clean up
+  - 'sudo docker stop "$(cat ${container_id})"'
