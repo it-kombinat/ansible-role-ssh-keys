@@ -8,3 +8,4 @@ ssh_keys_clean: False
 ssh_keys_user:
   root:
     - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+#    - "{{ afjsfdhsfdhsdfjhgdsjf }}"
